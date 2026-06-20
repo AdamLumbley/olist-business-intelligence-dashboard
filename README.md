@@ -23,10 +23,9 @@ Power BI project analyzing the Olist e-commerce dataset with executive, operatio
 ![Data Model](https://github.com/AdamLumbley/olist-business-intelligence-dashboard/blob/main/olist-star-schema.png)
 
 ## The model follows a star schema design centered around the Orders fact table.
-Dimension tables include: customers, sellers, products, payments, and geolocation. 
-A dedicated date dimesion enables time intelligence calculations. 
-A controlled snowflake extension supports hiearchiacal geographic analysis.
----
+Dimension tables include: customers, sellers, products, payments, and geolocation.
+A dedicated date dimension enables time intelligence calculations.
+A controlled snowflake extension supports hierarchical geographic analysis.
 
 ## Overview
 This project analyzes Olist e-commerce operations using a structured Power BI data model. The goal is to evaluate revenue performance, delivery efficiency, and customer satisfaction through a star-schema-based analytical layer.
