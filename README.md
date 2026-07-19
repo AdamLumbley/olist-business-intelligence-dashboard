@@ -1,5 +1,4 @@
 # Olist Business Intelligence Dashboard
-
 Power BI project analyzing the Olist e-commerce dataset with executive, operations, and customer insights, supported by a star schema data model.
 
 ---
@@ -19,21 +18,8 @@ Power BI project analyzing the Olist e-commerce dataset with executive, operatio
 
 ---
 
-## Data Model (Star Schema)
-![Data Model](https://github.com/AdamLumbley/olist-business-intelligence-dashboard/blob/main/olist-star-schema.png)
-
-## Data Model (Star Schema)
-
-The model follows a star schema design centered around the Orders fact table.
-
-Dimension tables include: customers, sellers, products, payments, and geolocation.
-
-A dedicated date dimension enables time intelligence calculations.
-
-A controlled snowflake extension supports hierarchical geographic analysis.
-
 ## Overview
-This project analyzes Olist e-commerce operations using a structured Power BI data model. The goal is to evaluate revenue performance, delivery efficiency, and customer satisfaction through a star-schema-based analytical layer.
+This project analyzes Olist e-commerce operations using a structured Power BI data model. The goal was to practice the full BI workflow — designing a data model, cleaning multi-source data, and building KPIs that answer real business questions about revenue, delivery performance, and customer satisfaction.
 
 - Built in Power BI
 - Star schema data model
@@ -48,34 +34,58 @@ This project analyzes Olist e-commerce operations using a structured Power BI da
 4. What patterns exist in customer review behavior?
 5. How efficient are operational processes at scale?
 
-## Data Model & Architecture
+---
 
-1. Designed a 9-table star schema data model with a controlled snowflake extension for hierarchical analysis.
-2. Built and integrated a dedicated date dimension table enabling time-based analysis (trends, seasonality).
-3. Established referential integrity across fact and dimension tables for consistent filtering behavior.
+## Data Model (Star Schema)
+![Data Model](https://github.com/AdamLumbley/olist-business-intelligence-dashboard/blob/main/olist-star-schema.png)
+
+The model follows a star schema design centered around the Orders fact table. Dimension tables include customers, sellers, products, payments, and geolocation. A dedicated date dimension enables time intelligence calculations, and a controlled snowflake extension supports hierarchical geographic analysis.
+
+1. Designed a 9-table star schema with a controlled snowflake extension for hierarchical analysis.
+2. Built and integrated a dedicated date dimension table to enable time-based analysis (trends, seasonality).
+3. Established 1:many relationships with single-direction filtering from dimension tables into the fact table for consistent filtering behavior.
+
+---
 
 ## ETL & Data Preparation
 1. Developed ETL pipelines in Power Query to transform raw CSV datasets into an analytical model.
 2. Performed data integrity correction across 60K records using an outer left join in Power Query to reconcile mismatched records across tables.
 3. Standardized and cleaned multi-source datasets prior to modeling.
 
-## KPI Layer (DAX Measures)
+---
 
-1. Revenue (Delivered Orders Only)
-2. Delivery Delay Rate
-3. Average Delivery Time
-4. 1-Star Review Rate
+## KPI Layer (DAX Measures)
+I designed which KPIs the business questions above required, then used AI (Claude/Gemini) to help write the DAX syntax to implement them. I'm self-taught and still building fluency with DAX beyond core aggregation functions (SUM, COUNTROWS, DIVIDE) — using AI here is part of how I'm learning the language, not a replacement for understanding what each measure needs to calculate and why.
+
+| KPI Category | Measure | Purpose |
+| :--- | :--- | :--- |
+| **Financials** | `Total Realized Revenue` | Aggregates payments specifically for 'Delivered' orders. |
+| **Growth** | `MoM Realized Rev Change %` | Calculates month-over-month revenue growth. |
+| **Logistics** | `Avg Delivery Days` | Calculates the duration from order placement to customer delivery. |
+| **Efficiency** | `Delayed Orders %` | Identifies the ratio of orders exceeding the estimated delivery date. |
+| **Quality** | `1-Star Review Rate` | Tracks negative sentiment trends against total review volume. |
+
+### Sample: Delayed Orders %
+```dax
+Delayed Orders % =
+VAR TotalDelivered = CALCULATE(COUNTROWS(Orders), Orders[Order Status] = "delivered")
+VAR TotalDelayed = CALCULATE(
+    COUNTROWS(Orders),
+    Orders[Order Status] = "delivered" &&
+    Orders[Order Delivered Customer Date] > Orders[Estimated Delivery Date]
+)
+RETURN
+DIVIDE(TotalDelayed, TotalDelivered, 0)
+```
+
+---
 
 ## Tech Stack
+Power BI · Power Query (ETL) · DAX (AI-assisted) · Data Modeling (Star Schema)
 
-Power BI
-Power Query (ETL)
-DAX
-Data modeling (Star Schema)
-
+---
 
 ## Key Insights
-
-1. Average dispatch time is 3.21 days, while average total delivery time is 12.50 days, indicating that the majority of delay occurs during courier transit rather than internal order processing.
-2. Customer review scores improved from 3.54 (2016) to 4.09 (2017) and then stabilized through 2018. This improvement aligns with a significant reduction in delivery times during the same period, from approximately 55 days in early 2016 to ~12.5 days on average later in the dataset.
-3. The combined dashboards indicate overall improvement in operational performance across the observed time period, particularly driven by faster delivery cycles and improved customer satisfaction metrics.
+1. Average dispatch time is 3.21 days, while average total delivery time is 12.50 days — indicating most delay happens during courier transit rather than internal order processing.
+2. Customer review scores improved from 3.54 (2016) to 4.09 (2017) and then stabilized through 2018, alongside a drop in average delivery time from ~55 days in early 2016 to ~12.5 days later in the dataset.
+3. Taken together, the dashboards show operational performance improving over the observed period, driven largely by faster delivery cycles and better customer satisfaction metrics.
