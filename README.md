@@ -55,9 +55,8 @@ This project analyzes Olist e-commerce operations using a structured Power BI da
 3. Established referential integrity across fact and dimension tables for consistent filtering behavior.
 
 ## ETL & Data Preparation
-
 1. Developed ETL pipelines in Power Query to transform raw CSV datasets into an analytical model.
-2. Performed data integrity correction across 60K records using SQL-style join (OUTER LEFT JOIN) reconciliation logic.
+2. Performed data integrity correction across 60K records using an outer left join in Power Query to reconcile mismatched records across tables.
 3. Standardized and cleaned multi-source datasets prior to modeling.
 
 ## KPI Layer (DAX Measures)
@@ -72,7 +71,6 @@ This project analyzes Olist e-commerce operations using a structured Power BI da
 Power BI
 Power Query (ETL)
 DAX
-SQL (data exploration / transformation)
 Data modeling (Star Schema)
 
 
